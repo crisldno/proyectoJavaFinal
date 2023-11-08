@@ -6,6 +6,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.bolsadeideas.springboot.app.models.service.IUploadFileService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 public class SpringBootDataJpaApplication  implements CommandLineRunner {
@@ -22,6 +24,11 @@ public class SpringBootDataJpaApplication  implements CommandLineRunner {
 		// TODO Auto-generated method stub
 		uploadFileService.deleteAll();
 		uploadFileService.init();
+	}
+
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
 	}
 
 }

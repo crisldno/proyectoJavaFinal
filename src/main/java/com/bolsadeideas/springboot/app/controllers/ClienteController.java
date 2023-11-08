@@ -187,7 +187,8 @@ public class ClienteController {
 				System.out.println(respuestaImpar);
 			}
 		}else{
-			return "redirect:listar";
+			System.out.println("FALLO");
+			return "redirect:/listar";
 		}
 
 
@@ -195,7 +196,7 @@ public class ClienteController {
 
 
 
-		return "redirect:listar";
+		return "redirect:/listar";
 	}
 
 	@RequestMapping(value = "/eliminar/{id}")
