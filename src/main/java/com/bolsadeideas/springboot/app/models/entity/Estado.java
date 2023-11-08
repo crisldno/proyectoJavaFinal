@@ -5,7 +5,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Table(name = "estados")
-public class Estados {
+public class Estado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,10 +14,10 @@ public class Estados {
     @NotEmpty
     private String nombre;
 
-    public Estados() {
+    public Estado() {
     }
 
-    public Estados(Long id, String nombre) {
+    public Estado(Long id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }

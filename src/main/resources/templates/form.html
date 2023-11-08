@@ -88,27 +88,7 @@
 								th:if="${#fields.hasErrors('numeroCuenta')}" th:errors="*{numeroCuenta}"></small>
 						</div>
 					</div>
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label">Estado de Solicitud</label>
-						<div class="col-sm-6">
-							<input type="text" th:field="*{estadoSolicitud}" class="form-control"
-								   th:errorclass="'form-control alert-danger'" /> <small
-								class="form-text text-danger"
-								th:if="${#fields.hasErrors('estadoSolicitud')}" th:errors="*{estadoSolicitud}"></small>
-						</div>
-					</div>
-					<div class="form-group row">
-						<label class="col-sm-2 col-form-label">Motivo de Rechazo</label>
-						<div class="col-sm-6">
-							<input type="text" th:field="*{motivoRechazo}" class="form-control"
-								   th:errorclass="'form-control alert-danger'" /> <small
-								class="form-text text-danger"
-								th:if="${#fields.hasErrors('motivoRechazo')}" th:errors="*{motivoRechazo}"></small>
-						</div>
-					</div>
 
-
-					
 					<div class="form-group row">
 						<div class="col-sm-6">
 							<input type="submit" value="Crear Cliente" class="btn btn-secondary" />

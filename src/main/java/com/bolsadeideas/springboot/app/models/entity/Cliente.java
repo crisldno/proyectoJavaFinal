@@ -3,14 +3,7 @@ package com.bolsadeideas.springboot.app.models.entity;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -55,8 +48,9 @@ public class Cliente implements Serializable {
 	@Column(name = "Numero_Cuenta")
 	private String numeroCuenta;
 
-	@Column(name = "Estado_Solicitud")
-	private String estadoSolicitud;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "estado_id", referencedColumnName = "id")
+	private Estado estado;
 
 	@Column(name = "Motivo_Rechazo")
 	private String motivoRechazo;
@@ -90,12 +84,12 @@ public class Cliente implements Serializable {
 		this.numeroCuenta = numeroCuenta;
 	}
 
-	public String getEstadoSolicitud() {
-		return estadoSolicitud;
+	public Estado getEstado() {
+		return estado;
 	}
 
-	public void setEstadoSolicitud(String estadoSolicitud) {
-		this.estadoSolicitud = estadoSolicitud;
+	public void setEstado(Estado estado) {
+		this.estado = estado;
 	}
 
 	public String getMotivoRechazo() {

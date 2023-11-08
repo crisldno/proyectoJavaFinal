@@ -6,6 +6,10 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+import com.bolsadeideas.springboot.app.models.entity.Estado;
+import com.bolsadeideas.springboot.app.models.service.EstadoService;
+import com.bolsadeideas.springboot.app.models.service.EstadoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -23,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -39,7 +44,13 @@ public class ClienteController {
 	private IClienteService clienteService;
 
 	@Autowired
+	private EstadoService estadoService;
+	@Autowired
 	private IUploadFileService uploadFileService;
+
+	@Autowired
+	private RestTemplate restTemplate;
+
 
 	@GetMapping(value = "/uploads/{filename:.+}")
 	public ResponseEntity<Resource> verFoto(@PathVariable String filename) {
@@ -153,10 +164,37 @@ public class ClienteController {
 		}
 
 		String mensajeFlash = (cliente.getId() != null) ? "Cliente editado con éxito!" : "Cliente creado con éxito!";
-
+		Estado estado = estadoService.findById(1);
+		cliente.setEstado(estado);
 		clienteService.save(cliente);
 		status.setComplete();
 		flash.addFlashAttribute("success", mensajeFlash);
+		return "redirect:listar";
+	}
+
+	@RequestMapping(value = "/enviar/{id}", method = RequestMethod.GET)
+	public String enviar(@PathVariable(value = "id") Long id) {
+		Cliente cliente = clienteService.findOne(id);
+
+		if(!cliente.getFoto().isEmpty()){
+			if(cliente.getId() % 2 == 0){
+				String urlPar = "https://run.mocky.io/v3/b9a4b435-e479-4369-a0f1-7e222f88f9d6";
+				String respuestaPar = restTemplate.getForObject(urlPar, String.class);
+				System.out.println(respuestaPar);
+			}else{
+				String urlImpar = "https://run.mocky.io/v3/824d579f-4e0f-4a83-856d-dc61341550e4";
+				String respuestaImpar = restTemplate.getForObject(urlImpar, String.class);
+				System.out.println(respuestaImpar);
+			}
+		}else{
+			return "redirect:listar";
+		}
+
+
+
+
+
+
 		return "redirect:listar";
 	}
 
