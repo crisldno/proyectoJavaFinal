@@ -10,6 +10,7 @@ import ch.qos.logback.core.net.SyslogOutputStream;
 import com.bolsadeideas.springboot.app.models.entity.Estado;
 import com.bolsadeideas.springboot.app.models.service.EstadoService;
 import com.bolsadeideas.springboot.app.models.service.EstadoServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -177,25 +178,42 @@ public class ClienteController {
 		Cliente cliente = clienteService.findOne(id);
 
 		if(!cliente.getFoto().isEmpty()){
+			String url;
 			if(cliente.getId() % 2 == 0){
-				String urlPar = "https://run.mocky.io/v3/b9a4b435-e479-4369-a0f1-7e222f88f9d6";
-				String respuestaPar = restTemplate.getForObject(urlPar, String.class);
-				System.out.println(respuestaPar);
+				 url = "https://run.mocky.io/v3/b9a4b435-e479-4369-a0f1-7e222f88f9d6";
 			}else{
-				String urlImpar = "https://run.mocky.io/v3/824d579f-4e0f-4a83-856d-dc61341550e4";
-				String respuestaImpar = restTemplate.getForObject(urlImpar, String.class);
-				System.out.println(respuestaImpar);
+				 url = "https://run.mocky.io/v3/824d579f-4e0f-4a83-856d-dc61341550e4";
 			}
+
+			String respuesta = restTemplate.getForObject(url, String.class);
+
+			try {
+				ObjectMapper objectMapper = new ObjectMapper();
+				Map<String, Object> jsonMap = objectMapper.readValue(respuesta, Map.class);
+
+				Long numeroCuentaFromResponse = ((Number) jsonMap.get("numeroCuenta")).longValue();
+				Long numeroCuentaFromCliente = cliente.getNumeroCuenta();
+				String nombreFoto = cliente.getFoto();
+
+				if (numeroCuentaFromResponse != null && numeroCuentaFromResponse.equals(numeroCuentaFromCliente) && nombreFoto.toLowerCase().contains("cedula") ) {
+					System.out.println("Los números de cuenta coinciden y la foto tiene la palabra cedula");
+					Estado estadoAprobado = estadoService.findById(2);
+					cliente.setEstado(estadoAprobado);
+					clienteService.save(cliente);
+				} else {
+					System.out.println("Los números de cuenta no coinciden.");
+					Estado estadoRechazado = estadoService.findById(3);
+					cliente.setEstado(estadoRechazado);
+					clienteService.save(cliente);
+				}
+			} catch (IOException e) {
+				System.err.println("Error al analizar la respuesta JSON: " + e.getMessage());
+			}
+
 		}else{
 			System.out.println("FALLO");
 			return "redirect:/listar";
 		}
-
-
-
-
-
-
 		return "redirect:/listar";
 	}
 

@@ -46,7 +46,7 @@ public class Cliente implements Serializable {
 	private int plazo;
 
 	@Column(name = "Numero_Cuenta")
-	private String numeroCuenta;
+	private long numeroCuenta;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "estado_id", referencedColumnName = "id")
@@ -76,11 +76,11 @@ public class Cliente implements Serializable {
 		this.plazo = plazo;
 	}
 
-	public String getNumeroCuenta() {
+	public long getNumeroCuenta() {
 		return numeroCuenta;
 	}
 
-	public void setNumeroCuenta(String numeroCuenta) {
+	public void setNumeroCuenta(long numeroCuenta) {
 		this.numeroCuenta = numeroCuenta;
 	}
 
